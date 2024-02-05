@@ -39,9 +39,9 @@ dependencies = [
 
 [[package]]
 name = "roped"
-version = "0.3.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "853b6b1caa836f10c746ff3e6dcb7173e2217a4e9b5e39687b6f5b343a79cc72"
+checksum = "3d92266d34d3345144301e176342b04b1dd37e65f34c5fe7fb86f9dd7cc578fc"
 dependencies = [
  "bundle-derive",
  "strand-derive",

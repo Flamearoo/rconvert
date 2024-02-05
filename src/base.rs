@@ -40,7 +40,7 @@ impl TypeIdent {
             TypeIdent::Hexadecimal() => input
                 .chars()
                 .collect::<Vec<char>>()
-                .chunks(8)
+                .chunks(2)
                 .map(|chunk| {
                     u8::from_str_radix(chunk.iter().collect::<String>().as_str(), 16).unwrap()
                 })
@@ -93,7 +93,7 @@ fn decode(input: &str) -> (&str, TypeIdent) {
 
 fn recode(input: &str, ty: TypeIdent) -> String {
     match ty {
-        TypeIdent::String() => format!("0s{}", input),
+        TypeIdent::String() => input.into(),
         TypeIdent::Binary() => format!("0b{}", input),
         TypeIdent::Hexadecimal() => format!("0x{}", input),
     }
