@@ -71,9 +71,7 @@ impl FromStr for TypeIdent {
             "str" => Ok(TypeIdent::String()),
             "bin" => Ok(TypeIdent::Binary()),
             "hex" => Ok(TypeIdent::Hexadecimal()),
-            _ => {
-                Err(())
-            },
+            _ => Err(()),
         }
     }
 }
