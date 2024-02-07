@@ -1,4 +1,4 @@
-use std::str::FromStr;
+use std::{fmt::Write, str::FromStr};
 
 use roped::*;
 
@@ -13,8 +13,8 @@ struct Convertor {
 }
 
 impl Convertor {
-    fn convert(&self, input: &str) -> String {
-        self.b.from_bytes(self.a.to_bytes(input))
+    fn convert(&self, input: &str) -> Result<String, String> {
+        Ok(self.b.convert_from_bytes(self.a.convert_to_bytes(input)?))
     }
 }
 
@@ -26,7 +26,7 @@ enum TypeIdent {
 }
 
 impl TypeIdent {
-    fn to_bytes(&self, input: &str) -> Result<Vec<u8>, String> {
+    fn convert_to_bytes(&self, input: &str) -> Result<Vec<u8>, String> {
         match self {
             TypeIdent::String() => Ok(input.as_bytes().to_vec()),
             TypeIdent::Binary() => input
@@ -34,7 +34,8 @@ impl TypeIdent {
                 .collect::<Vec<char>>()
                 .chunks(8)
                 .map(|chunk| {
-                    u8::from_str_radix(chunk.iter().collect::<String>().as_str(), 2).map_err()?
+                    u8::from_str_radix(chunk.iter().collect::<String>().as_str(), 2)
+                        .map_err(|_| "Could not parse from binay".into())
                 })
                 .collect(),
             TypeIdent::Hexadecimal() => input
@@ -42,23 +43,24 @@ impl TypeIdent {
                 .collect::<Vec<char>>()
                 .chunks(2)
                 .map(|chunk| {
-                    u8::from_str_radix(chunk.iter().collect::<String>().as_str(), 16).unwrap()
+                    u8::from_str_radix(chunk.iter().collect::<String>().as_str(), 16)
+                        .map_err(|_| "Could not parse from hexadecimal".into())
                 })
                 .collect(),
         }
     }
 
-    fn from_bytes(&self, input: Vec<u8>) -> String {
+    fn convert_from_bytes(&self, input: Vec<u8>) -> String {
         match self {
             TypeIdent::String() => String::from_utf8_lossy(&input).to_string(),
-            TypeIdent::Binary() => input
-                .iter()
-                .map(|&byte| format!("{:08b}", byte))
-                .collect::<String>(),
-            TypeIdent::Hexadecimal() => input
-                .iter()
-                .map(|&byte| format!("{:02X}", byte))
-                .collect::<String>(),
+            TypeIdent::Binary() => input.iter().fold(String::new(), |mut w, &byte| {
+                write!(w, "{:08b}", byte).unwrap();
+                w
+            }),
+            TypeIdent::Hexadecimal() => input.iter().fold(String::new(), |mut w, &byte| {
+                write!(w, "{:02X}", byte).unwrap();
+                w
+            }),
         }
     }
 }
@@ -143,11 +145,7 @@ impl Convert {
             b: self.ty,
         };
 
-        let converted = if convertor.a == convertor.b {
-            decoded.into()
-        } else {
-            convertor.convert(decoded)
-        };
+        let converted = convertor.convert(decoded)?;
 
         println!("{}", recode(&converted, self.ty));
 
