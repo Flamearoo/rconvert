@@ -6,6 +6,13 @@ use base::*;
 
 fn main() {
     loop {
-        parse::run_console::<Container, EmptyState>(&mut EmptyState, "> ".into(), &[' '], &[';'])
+        parse::run_console::<Container, EmptyState>(
+            &mut EmptyState,
+            "> ".into(),
+            ". ".into(),
+            "!".into(),
+            &[' '],
+            &[';'],
+        )
     }
 }

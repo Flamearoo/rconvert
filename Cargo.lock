@@ -4,9 +4,9 @@ version = 3
 
 [[package]]
 name = "bundle-derive"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d5ea527e081706141626e05fff960c8d17a49efc8ec13467e15dc74cf8e166ba"
+checksum = "fd3b6080a5b3e4e62c6340412a0f5541b25bf88ef5a84c25bc1a3c4f4daccbba"
 dependencies = [
  "quote",
  "syn",
@@ -39,9 +39,9 @@ dependencies = [
 
 [[package]]
 name = "roped"
-version = "0.5.0"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d92266d34d3345144301e176342b04b1dd37e65f34c5fe7fb86f9dd7cc578fc"
+checksum = "d9e3b58c39b0d7b40aef310333189231647035cb31e3f4bef88349f85d444f18"
 dependencies = [
  "bundle-derive",
  "strand-derive",

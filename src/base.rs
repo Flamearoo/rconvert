@@ -26,15 +26,15 @@ enum TypeIdent {
 }
 
 impl TypeIdent {
-    fn to_bytes(&self, input: &str) -> Vec<u8> {
+    fn to_bytes(&self, input: &str) -> Result<Vec<u8>, String> {
         match self {
-            TypeIdent::String() => input.as_bytes().to_vec(),
+            TypeIdent::String() => Ok(input.as_bytes().to_vec()),
             TypeIdent::Binary() => input
                 .chars()
                 .collect::<Vec<char>>()
                 .chunks(8)
                 .map(|chunk| {
-                    u8::from_str_radix(chunk.iter().collect::<String>().as_str(), 2).unwrap()
+                    u8::from_str_radix(chunk.iter().collect::<String>().as_str(), 2).map_err()?
                 })
                 .collect(),
             TypeIdent::Hexadecimal() => input
@@ -101,10 +101,18 @@ fn recode(input: &str, ty: TypeIdent) -> String {
 #[derive(Bundle)]
 #[bundle(state = "EmptyState")]
 pub enum Container {
-    #[bundle(name = "quit")]
-    Quit(Quit),
+    #[bundle(prefix = ":")]
+    Sys(Sys),
     #[bundle(name = "convert")]
     Convert(Convert),
+}
+
+#[allow(dead_code)]
+#[derive(Bundle)]
+#[bundle(state = "EmptyState")]
+pub enum Sys {
+    #[bundle(name = "quit")]
+    Quit(Quit),
 }
 
 #[allow(dead_code)]
