@@ -26,7 +26,10 @@ fn decode(input: &str, base: u8) -> Result<BigUint, String> {
 fn recode(num: BigUint, base: u8) -> Result<String, String> {
     let arr = num.to_radix_be(base.into());
     arr.iter().try_fold(String::new(), |mut w: String, num| {
-        let char = CHAR_INDEX.get(num.to_owned() as usize).ok_or(format!("Could not convert to base {}", base))?.to_owned();
+        let char = CHAR_INDEX
+            .get(num.to_owned() as usize)
+            .ok_or(format!("Could not convert to base {}", base))?
+            .to_owned();
         w.push(char);
         Ok(w)
     })
@@ -39,8 +42,12 @@ struct Converter {
 
 impl Converter {
     fn convert(&self, input: &str) -> Result<String, String> {
-        if self.base_i > 64 || self.base_i < 1 { return Ok("Initial base is too large (1-64)".into()) };
-        if self.base_f > 64 || self.base_f < 1 { return Ok("Final base is too large (1-64)".into()) };
+        if self.base_i > 64 || self.base_i < 1 {
+            return Ok("Initial base is too large (1-64)".into());
+        };
+        if self.base_f > 64 || self.base_f < 1 {
+            return Ok("Final base is too large (1-64)".into());
+        };
         recode(decode(input, self.base_i)?, self.base_f)
     }
 }
@@ -67,7 +74,7 @@ impl std::str::FromStr for BaseWrapper {
             "hxa" => Ok(BaseWrapper(32)),
             "sn2" => Ok(BaseWrapper(36)),
             "hxb" => Ok(BaseWrapper(64)),
-            n => Ok(BaseWrapper(n.parse::<u8>().map_err(|_| EmptyState)?))
+            n => Ok(BaseWrapper(n.parse::<u8>().map_err(|_| EmptyState)?)),
         }
     }
 }
