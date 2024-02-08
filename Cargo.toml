@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 roped = "0.6.0"
+num-bigint = "0.4.4"
