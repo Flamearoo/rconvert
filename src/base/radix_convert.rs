@@ -25,12 +25,10 @@ fn decode(input: &str, base: u8) -> Result<BigUint, String> {
 
 fn recode(num: BigUint, base: u8) -> Result<String, String> {
     let arr = num.to_radix_be(base.into());
-    arr.iter().fold(Ok(String::new()), |w: Result<String, String>, num| {
-        w.and_then(|mut w| {
-            let char = CHAR_INDEX.get(num.to_owned() as usize).ok_or(format!("Could not convert to base {}", base))?.to_owned();
-            w.push(char);
-            Ok(w)
-        })
+    arr.iter().try_fold(String::new(), |mut w: String, num| {
+        let char = CHAR_INDEX.get(num.to_owned() as usize).ok_or(format!("Could not convert to base {}", base))?.to_owned();
+        w.push(char);
+        Ok(w)
     })
 }
 
