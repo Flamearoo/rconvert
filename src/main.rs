@@ -10,7 +10,7 @@ fn main() {
             &mut EmptyState,
             "> ".into(),
             ". ".into(),
-            "!".into(),
+            "ERROR: ".into(),
             &[' '],
             &[';'],
         )
